@@ -12,6 +12,7 @@ final class RouterFactory
         $router = new RouteList();
         $router->addRoute('prihlaseni', 'Sign:in');
         $router->addRoute('autori', 'Author:default');
+        $router->addRoute('kniha/nova', 'Book:add');
         $router->addRoute('', 'Book:default');
 
         return $router;

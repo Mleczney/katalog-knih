@@ -5,3 +5,6 @@ database:
 	dsn: 'mysql:host=db;dbname=katalog'
 	user: katalog
 	password: katalog
+
+session:
+	autoStart: always

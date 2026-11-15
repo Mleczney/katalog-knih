@@ -1,0 +1,45 @@
+<form n:name="bookForm" class="card card-body">
+	<div n:foreach="$form->getOwnErrors() as $error" class="alert alert-danger">{$error}</div>
+
+	<div class="row g-3">
+		<div class="col-md-9">
+			<label n:name="title" class="form-label">{$form['title']->getCaption()}</label>
+			<input n:name="title" n:class="form-control, $form['title']->hasErrors() ? is-invalid">
+			<div class="invalid-feedback" n:ifcontent>{inputError title}</div>
+		</div>
+
+		<div class="col-md-3">
+			<label n:name="year" class="form-label">{$form['year']->getCaption()}</label>
+			<input n:name="year" n:class="form-control, $form['year']->hasErrors() ? is-invalid">
+			<div class="invalid-feedback" n:ifcontent>{inputError year}</div>
+		</div>
+
+		<div class="col-12">
+			<label n:name="description" class="form-label">{$form['description']->getCaption()}</label>
+			<textarea n:name="description" rows="4" n:class="form-control, $form['description']->hasErrors() ? is-invalid"></textarea>
+			<div class="invalid-feedback" n:ifcontent>{inputError description}</div>
+		</div>
+
+		<div class="col-md-4">
+			<label n:name="publisher" class="form-label">{$form['publisher']->getCaption()}</label>
+			<select n:name="publisher" n:class="form-select, $form['publisher']->hasErrors() ? is-invalid"></select>
+			<div class="invalid-feedback" n:ifcontent>{inputError publisher}</div>
+		</div>
+
+		{foreach ['authors', 'genres'] as $name}
+			<fieldset class="col-md-4">
+				<legend class="form-label fs-6">{$form[$name]->getCaption()}</legend>
+				<div n:foreach="$form[$name]->getItems() as $key => $label" class="form-check">
+					<input n:name="$name:$key" class="form-check-input">
+					<label n:name="$name:$key" class="form-check-label">{$label}</label>
+				</div>
+				<div class="invalid-feedback d-block" n:ifcontent>{inputError $name}</div>
+			</fieldset>
+		{/foreach}
+	</div>
+
+	<div class="d-flex gap-2 mt-4">
+		<button n:name="save" class="btn btn-primary">Uložit</button>
+		<a n:href="default" class="btn btn-outline-secondary">Zpět na katalog</a>
+	</div>
+</form>

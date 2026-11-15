@@ -79,4 +79,34 @@ final class BookFacade
 	{
 		return $this->database->table('genre')->order('name')->fetchPairs('id', 'name');
 	}
+
+	public function getPublisherPairs(): array
+	{
+		return $this->database->table('publisher')->order('name')->fetchPairs('id', 'name');
+	}
+
+	public function create(array $data): void
+	{
+		$this->database->transaction(function () use ($data): void {
+			$book = $this->database->table('book')->insert([
+				'title' => $data['title'],
+				'year' => $data['year'],
+				'description' => $data['description'],
+				'publisher_id' => $data['publisher'],
+			]);
+
+			foreach ($data['authors'] as $authorId) {
+				$this->database->table('book_author')->insert([
+					'book_id' => $book->id,
+					'author_id' => $authorId,
+				]);
+			}
+			foreach ($data['genres'] as $genreId) {
+				$this->database->table('book_genre')->insert([
+					'book_id' => $book->id,
+					'genre_id' => $genreId,
+				]);
+			}
+		});
+	}
 }

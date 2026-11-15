@@ -11,6 +11,7 @@ use Nette\Forms\Validator;
 
 final class FormFactory
 {
+	
 	public function __construct()
 	{
 		Validator::$messages = [
