@@ -1,0 +1,31 @@
+{block content}
+<h1 class="h3 mb-3">Autoři</h1>
+
+<div class="row g-4">
+	<div class="col-md-5 order-md-2">
+		<form n:name="authorForm" class="card card-body">
+			<h2 class="h5 mb-3">Přidat autora</h2>
+			<div n:foreach="$form->getOwnErrors() as $error" class="alert alert-danger">{$error}</div>
+
+			<div class="mb-3">
+				<label n:name="firstName" class="form-label">{$form['firstName']->getCaption()}</label>
+				<input n:name="firstName" n:class="form-control, $form['firstName']->hasErrors() ? is-invalid">
+				<div class="invalid-feedback" n:ifcontent>{inputError firstName}</div>
+			</div>
+
+			<div class="mb-3">
+				<label n:name="lastName" class="form-label">{$form['lastName']->getCaption()}</label>
+				<input n:name="lastName" n:class="form-control, $form['lastName']->hasErrors() ? is-invalid">
+				<div class="invalid-feedback" n:ifcontent>{inputError lastName}</div>
+			</div>
+
+			<button n:name="save" class="btn btn-primary">Přidat autora</button>
+		</form>
+	</div>
+
+	<div class="col-md-7 order-md-1">
+		<ul class="list-group">
+			<li n:foreach="$authors as $name" class="list-group-item">{$name}</li>
+		</ul>
+	</div>
+</div>

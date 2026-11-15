@@ -3,3 +3,4 @@ services:
 	- App\Model\BookFacade
 	- App\Model\UserAuthenticator
 	- App\Forms\FormFactory
+	- App\Model\AuthorRepository

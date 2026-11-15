@@ -75,13 +75,6 @@ final class BookFacade
 		return $books;
 	}
 
-	public function getAuthorPairs(): array
-	{
-		return $this->database->query(
-			"SELECT id, CONCAT(first_name, ' ', last_name) FROM author ORDER BY last_name, first_name",
-		)->fetchPairs();
-	}
-
 	public function getGenrePairs(): array
 	{
 		return $this->database->table('genre')->order('name')->fetchPairs('id', 'name');

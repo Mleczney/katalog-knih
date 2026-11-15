@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Presentation\Book;
 
+use App\Model\AuthorRepository;
 use App\Model\BookFacade;
 use App\Presentation\SecuredPresenter;
 
@@ -11,6 +12,7 @@ final class BookPresenter extends SecuredPresenter
 {
 	public function __construct(
 		private readonly BookFacade $books,
+		private readonly AuthorRepository $authors,
 	) {
 	}
 
@@ -20,7 +22,7 @@ final class BookPresenter extends SecuredPresenter
 		$genreId = $this->parseFilterId($genre);
 
 		$this->template->books = $this->books->findCatalog($authorId, $genreId);
-		$this->template->authors = $this->books->getAuthorPairs();
+		$this->template->authors = $this->authors->getPairs();
 		$this->template->genres = $this->books->getGenrePairs();
 		$this->template->selectedAuthor = $authorId;
 		$this->template->selectedGenre = $genreId;

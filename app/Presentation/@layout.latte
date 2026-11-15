@@ -12,6 +12,8 @@
 			<a class="navbar-brand" n:href="Book:default">Katalog knih</a>
 
 			<div n:if="$user->isLoggedIn()" class="d-flex align-items-center gap-3">
+				<a n:href="Book:default" class="nav-link text-light">Katalog</a>
+				<a n:href="Author:default" class="nav-link text-light">Autoři</a>
 				<span class="navbar-text">{$user->getIdentity()->email}</span>
 				<a n:href="logout!" class="btn btn-outline-light btn-sm">Odhlásit se</a>
 			</div>
