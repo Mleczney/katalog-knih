@@ -1,0 +1,7 @@
+application:
+	mapping: App\Presentation\*\**Presenter
+
+database:
+	dsn: 'mysql:host=db;dbname=katalog'
+	user: katalog
+	password: katalog

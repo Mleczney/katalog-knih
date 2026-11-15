@@ -1,0 +1,45 @@
+{block content}
+<h1 class="h3 mb-3">Katalog knih</h1>
+
+<form action="{link default}" method="get" class="card card-body mb-4">
+	<div class="row g-2 align-items-end">
+		<div class="col-sm-5">
+			<label for="filter-author" class="form-label">Autor</label>
+			<select name="author" id="filter-author" class="form-select">
+				<option value="">Všichni autoři</option>
+				<option n:foreach="$authors as $id => $name" value="{$id}" selected="{$id === $selectedAuthor}">{$name}</option>
+			</select>
+		</div>
+		<div class="col-sm-4">
+			<label for="filter-genre" class="form-label">Žánr</label>
+			<select name="genre" id="filter-genre" class="form-select">
+				<option value="">Všechny žánry</option>
+				<option n:foreach="$genres as $id => $name" value="{$id}" selected="{$id === $selectedGenre}">{$name}</option>
+			</select>
+		</div>
+		<div class="col-sm-3 d-flex gap-2">
+			<button type="submit" class="btn btn-secondary flex-fill">Filtrovat</button>
+			<a n:href="default" class="btn btn-outline-secondary">Zrušit</a>
+		</div>
+	</div>
+</form>
+
+{if $books}
+	<div class="row row-cols-1 row-cols-lg-2 g-3">
+		<div n:foreach="$books as $book" class="col">
+			<article class="card h-100">
+				<div class="card-body">
+					<h2 class="h5 mb-1">{$book['title']}</h2>
+					<p class="text-body-secondary small mb-2">{$book['year']} · {$book['publisher']}</p>
+					<p>{$book['description']}</p>
+				</div>
+				<div class="card-footer small">
+					<div><strong>Autoři:</strong> {$book['authors']|implode: ', '}</div>
+					<div><strong>Žánry:</strong> {$book['genres']|implode: ', '}</div>
+				</div>
+			</article>
+		</div>
+	</div>
+{else}
+	<div class="alert alert-info">Filtru neodpovídá žádná kniha.</div>
+{/if}

@@ -1,0 +1,26 @@
+{block content}
+<div class="row justify-content-center">
+	<div class="col-sm-10 col-md-6 col-lg-4">
+		<div class="card card-body p-4">
+			<h1 class="h4 mb-4">Přihlášení</h1>
+
+			<form n:name="signInForm">
+				<div n:foreach="$form->getOwnErrors() as $error" class="alert alert-danger">{$error}</div>
+
+				<div class="mb-3">
+					<label n:name="email" class="form-label">{$form['email']->getCaption()}</label>
+					<input n:name="email" n:class="form-control, $form['email']->hasErrors() ? is-invalid" autofocus>
+					<div class="invalid-feedback" n:ifcontent>{inputError email}</div>
+				</div>
+
+				<div class="mb-4">
+					<label n:name="password" class="form-label">{$form['password']->getCaption()}</label>
+					<input n:name="password" n:class="form-control, $form['password']->hasErrors() ? is-invalid">
+					<div class="invalid-feedback" n:ifcontent>{inputError password}</div>
+				</div>
+
+				<button n:name="send" class="btn btn-primary w-100">Přihlásit se</button>
+			</form>
+		</div>
+	</div>
+</div>

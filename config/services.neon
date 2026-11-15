@@ -1,0 +1,5 @@
+services:
+	- App\Core\RouterFactory::createRouter
+	- App\Model\BookFacade
+	- App\Model\UserAuthenticator
+	- App\Forms\FormFactory
