@@ -13,6 +13,7 @@ final class RouterFactory
         $router->addRoute('prihlaseni', 'Sign:in');
         $router->addRoute('autori', 'Author:default');
         $router->addRoute('kniha/nova', 'Book:add');
+        $router->addRoute('kniha/<id \d+>/upravit', 'Book:edit');
         $router->addRoute('', 'Book:default');
 
         return $router;

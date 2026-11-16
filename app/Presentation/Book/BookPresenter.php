@@ -13,6 +13,7 @@ use Nette\Database\ForeignKeyConstraintViolationException;
 
 final class BookPresenter extends SecuredPresenter
 {
+	private ?int $bookId = null;
 	public function __construct(
 		private readonly BookFacade $books,
 		private readonly AuthorRepository $authors,
@@ -30,6 +31,18 @@ final class BookPresenter extends SecuredPresenter
 		$this->template->genres = $this->books->getGenrePairs();
 		$this->template->selectedAuthor = $authorId;
 		$this->template->selectedGenre = $genreId;
+	}
+
+	public function actionEdit(int $id): void
+	{
+		$book = $this->books->getBook($id);
+		if ($book === null) {
+			$this->error('Kniha nebyla nalezena.');
+		}
+
+		$this->bookId = $id;
+		$this['bookForm']->setDefaults($book);
+		$this->template->bookTitle = $book['title'];
 	}
 
 	protected function createComponentBookForm(): Form
@@ -81,13 +94,18 @@ final class BookPresenter extends SecuredPresenter
 	private function bookFormSucceeded(Form $form, array $values): void
 	{
 		try {
-			$this->books->create($values);
+			if ($this->bookId === null) {
+				$this->books->create($values);
+				$this->flashMessage("Kniha „{$values['title']}“ byla přidána.", 'success');
+			} else {
+				$this->books->update($this->bookId, $values);
+				$this->flashMessage("Kniha „{$values['title']}“ byla uložena.", 'success');
+			}
 		} catch (ForeignKeyConstraintViolationException) {
 			$form->addError('Vybraný autor, žánr nebo nakladatelství už neexistuje.');
 			return;
 		}
 
-		$this->flashMessage("Kniha „{$values['title']}“ byla přidána.", 'success');
 		$this->redirect('default');
 	}
 

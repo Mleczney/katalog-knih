@@ -87,26 +87,61 @@ final class BookFacade
 
 	public function create(array $data): void
 	{
-		$this->database->transaction(function () use ($data): void {
-			$book = $this->database->table('book')->insert([
-				'title' => $data['title'],
-				'year' => $data['year'],
-				'description' => $data['description'],
-				'publisher_id' => $data['publisher'],
-			]);
+		$this->database->transaction(function () use ($data) : void
+		{
+			$book = $this->database->table('book')->insert($this->bookColumns($data));
+			$this->syncLinks('book_author', 'author_id', $book->id, $data['authors']);
+			$this->syncLinks('book_genre', 'genre_id', $book->id, $data['genres']);
 
-			foreach ($data['authors'] as $authorId) {
-				$this->database->table('book_author')->insert([
-					'book_id' => $book->id,
-					'author_id' => $authorId,
-				]);
-			}
-			foreach ($data['genres'] as $genreId) {
-				$this->database->table('book_genre')->insert([
-					'book_id' => $book->id,
-					'genre_id' => $genreId,
-				]);
-			}
 		});
 	}
+
+	public function update(int $id, array $data): void
+	{
+		$this->database->transaction(function () use ($id, $data): void {
+			$this->database->table('book')->where('id', $id)->update($this->bookColumns($data));
+			$this->syncLinks('book_author', 'author_id', $id, $data['authors']);
+			$this->syncLinks('book_genre', 'genre_id', $id, $data['genres']);
+		});
+	}
+
+	public function getBook(int $id) : ?array
+	{
+		$book = $this->database->table('book')->get($id);
+		if( $book === null ){
+			return null;
+		}
+
+		return [
+			'title' => $book->title,
+			'year' => $book->year,
+			'description' => $book->description,
+			'publisher' => $book->publisher_id,
+			'authors' => $this->database->table('book_author')->where('book_id', $id)->fetchPairs(null, 'author_id'),
+			'genres' => $this->database->table('book_genre')->where('book_id', $id)->fetchPairs(null, 'genre_id'),
+		];
+	}
+
+	private function bookColumns(array $data) : array
+	{
+		return [
+			'title' => $data['title'],
+			'year' => $data['year'],
+			'description' => $data['description'],
+			'publisher_id' => $data['publisher'],
+		];
+	}
+
+	private function syncLinks(string $table, string $column, int  $bookId, array $ids) : void
+	{
+		$this->database->table($table)->where('book_id', $bookId)->where("$column NOT", $ids)->delete();
+
+		$existing = $this->database->table($table)->where('book_id', $bookId)->fetchPairs(null, $column);
+
+		foreach (array_diff($ids, $existing) as $id) {
+			$this->database->table($table)->insert(['book_id' => $bookId, $column => $id]);
+		}
+	}
+
+
 }
